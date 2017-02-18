@@ -3,16 +3,16 @@
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
-function MyObject(scene) {
+function MyQuad(scene) {
 	CGFobject.call(this,scene);
 
 	this.initBuffers();
 };
 
-MyObject.prototype = Object.create(CGFobject.prototype);
-MyObject.prototype.constructor=MyObject;
+MyQuad.prototype = Object.create(CGFobject.prototype);
+MyQuad.prototype.constructor=MyQuad;
 
-MyObject.prototype.initBuffers = function () {
+MyQuad.prototype.initBuffers = function () {
 	this.vertices = [
             -0.5, -0.5, 0,
             0.5, -0.5, 0,

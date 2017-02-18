@@ -1,13 +1,10 @@
 
-
-//INICIO DO MECANISMO DE HERANCA NO JS
 function TPscene() {
     CGFscene.call(this);
 }
 
 TPscene.prototype = Object.create(CGFscene.prototype);
 TPscene.prototype.constructor = TPscene;
-//FIM DO MECANISMO DE HERANCA NO JS
 
 TPscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
@@ -17,7 +14,6 @@ TPscene.prototype.init = function (application) {
     this.initLights();
 
 
-	// this.gl -> OpenGL
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
@@ -25,9 +21,7 @@ TPscene.prototype.init = function (application) {
     this.gl.depthFunc(this.gl.LEQUAL);
 
 	this.axis=new CGFaxis(this);
-    //this.obj = new MyObject(this);
-    this.cube = new MyUnitCube(this);
-    this.quad = new MyUnitCubeQuad(this);
+    this.obj = new MyObject(this);
 
 
     // NOTE: OpenGL transformation matrices are transposed
@@ -38,7 +32,6 @@ TPscene.prototype.init = function (application) {
                   0.0, 1.0, 0.0, 0.0,
                   0.0, 0.0, 1.0, 0.0,
                   5.0, 0.0, 2.0, 1.0  ];
-
 
 	// Rotate 30 degrees around Y
 	// These constants would normally be pre-computed at initialization time
@@ -53,10 +46,9 @@ TPscene.prototype.init = function (application) {
                 0.0,    1.0,   0.0,    0.0,
                 sin_a,  0.0,   cos_a,  0.0,
                 0.0,    0.0,   0.0,    1.0 ];
-    
 
 	// Scaling by (5,2,1)
-	
+
     this.sca = [ 5.0, 0.0, 0.0, 0.0,
                 0.0, 2.0, 0.0, 0.0,
                 0.0, 0.0, 1.0, 0.0,
@@ -104,12 +96,22 @@ TPscene.prototype.display = function () {
 	this.setDefaultAppearance();
 	
 	// ---- END Background, camera and axis setup
-	
-	//this.obj.display();
 
-	this.cube.display();
-
-	this.translate(2,0,0);
 	
-	this.quad.display();
+	// ---- BEGIN Geometric transformation section
+
+	// Multiplication of the previous transformations
+	//this.multMatrix(this.tra);     // GT = GT * tra
+	//this.multMatrix(this.rot);     // GT = GT * rot
+	//this.multMatrix(this.sca);     // GT = GT * sca
+
+	// ---- END Geometric transformation section
+	
+
+	// ---- BEGIN Primitive drawing section
+
+	this.obj.display();
+	
+	// ---- END Primitive drawing section
+
 };
