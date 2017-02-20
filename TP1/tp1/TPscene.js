@@ -9,6 +9,7 @@ TPscene.prototype = Object.create(CGFscene.prototype);
 TPscene.prototype.constructor = TPscene;
 //FIM DO MECANISMO DE HERANCA NO JS
 
+
 TPscene.prototype.init = function (application) {
     CGFscene.prototype.init.call(this, application);
 
