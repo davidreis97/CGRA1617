@@ -29,6 +29,8 @@ TPscene.prototype.init = function (application) {
     //this.obj = new MyObject(this);
     this.cube = new MyUnitCube(this);
     this.quad = new MyUnitCubeQuad(this);
+    this.table = new MyTable(this);
+    this.floor = new MyFloor(this);
 
 
     // NOTE: OpenGL transformation matrices are transposed
@@ -108,9 +110,14 @@ TPscene.prototype.display = function () {
 	
 	//this.obj.display();
 
-	this.cube.display();
+	//this.cube.display();
 
-	this.translate(2,0,0);
+	//this.translate(2,0,0);
 	
-	this.quad.display();
+	//this.quad.display();
+
+    this.translate(4,0,3);
+	this.table.display();
+
+    this.floor.display();
 };
