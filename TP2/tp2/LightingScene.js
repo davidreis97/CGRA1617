@@ -42,8 +42,14 @@ LightingScene.prototype.init = function(application) {
 	this.materialA = new CGFappearance(this);
 	this.materialA.setAmbient(0.3,0.3,0.3,1);
 	this.materialA.setDiffuse(0.6,0.6,0.6,1);
-	this.materialA.setSpecular(0,0,0.2,1);
-	this.materialA.setShininess(120); //O que é a shininess ao certo?
+	this.materialA.setSpecular(0,0.2,0.8,1);
+	this.materialA.setShininess(120);
+
+	this.floorMaterial = new CGFappearance(this); //Pink, divided by 255 because according to documentation colors need to be between 0 and 1
+	this.floorMaterial.setAmbient(0.2*255/255,0.2*192/255,0.2*203/255,1);
+	this.floorMaterial.setDiffuse(255/255,192/255,203/255,1);
+	this.floorMaterial.setSpecular(0.5*255/255,0.5*192/255,0.5*203/255,1);
+	this.floorMaterial.setShininess(120);
 
 	this.materialB = new CGFappearance(this);
 	this.materialB.setAmbient(0.3,0.3,0.3,1);
@@ -68,20 +74,37 @@ LightingScene.prototype.initLights = function() {
 	this.lights[1].setPosition(10.5, 6.0, 1.0, 1.0);
 	this.lights[1].setVisible(true); // show marker on light position (different from enabled)
 
-	//this.lights[2].setPosition(10.5, 6.0, 5.0, 1.0);
-	//this.lights[1].setVisible(true); // show marker on light position (different from enabled)
-	//this.lights[3].setPosition(4, 6.0, 5.0, 1.0);
-	//this.lights[1].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[2].setPosition(10.5, 6.0, 5.0, 1.0);
+	this.lights[2].setVisible(true); // show marker on light position (different from enabled)
+	this.lights[3].setPosition(4, 6.0, 5.0, 1.0);
+	this.lights[3].setVisible(true); // show marker on light position (different from enabled)
+	
 
 	this.lights[0].setAmbient(0, 0, 0, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
-	this.lights[0].setSpecular(255,255,0,1);
+	this.lights[0].setSpecular(1,1,0,1);
 	this.lights[0].enable();
 	
 
 	this.lights[1].setAmbient(0, 0, 0, 1);
 	this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
 	this.lights[1].enable();
+
+	this.lights[2].setAmbient(0, 0, 0, 1);
+	this.lights[2].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[2].setSpecular(1,1,1,1);
+	this.lights[2].setConstantAttenuation(0);
+	this.lights[2].setLinearAttenuation(1);
+	this.lights[2].setQuadraticAttenuation(0);
+	this.lights[2].enable();
+
+	this.lights[3].setAmbient(0, 0, 0, 1);
+	this.lights[3].setDiffuse(1.0, 1.0, 1.0, 1.0);
+	this.lights[3].setSpecular(1,1,0,1);
+	this.lights[3].setConstantAttenuation(0);
+	this.lights[3].setLinearAttenuation(0);
+	this.lights[3].setQuadraticAttenuation(0.2);
+	this.lights[3].enable();
 };
 
 LightingScene.prototype.updateLights = function() {
@@ -110,7 +133,7 @@ LightingScene.prototype.display = function() {
 	// Draw axis
 	this.axis.display();
 
-	this.materialDefault.apply();
+	this.floorMaterial.apply();
 
 	// ---- END Background, camera and axis setup
 
