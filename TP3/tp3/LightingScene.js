@@ -32,6 +32,8 @@ LightingScene.prototype.init = function(application) {
 	this.table = new MyTable(this);
 	this.wall = new Plane(this);
 	this.floor = new MyQuad(this);
+	this.prism = new MyPrism(this,8,20);
+	this.cylinder = new MyCylinder(this,8,20);
 	
 	this.boardA = new Plane(this, BOARD_A_DIVISIONS);
 	this.boardB = new Plane(this, BOARD_B_DIVISIONS);
@@ -198,5 +200,23 @@ LightingScene.prototype.display = function() {
 		this.boardB.display();
 	this.popMatrix();
 
+	// MyPrism
+	this.pushMatrix();
+		this.scale(1,10,1);
+		this.translate(10,1,5);
+
+		this.rotate(90 * degToRad, 1, 0, 0);
+		this.prism.display();
+	this.popMatrix();
+	// ---- END Primitive drawing section
+
+	// MyCylinder
+	this.pushMatrix();
+		this.scale(1,10,1);
+		this.translate(5,1,5);
+
+		this.rotate(90 * degToRad, 1, 0, 0);
+		this.cylinder.display();
+	this.popMatrix();
 	// ---- END Primitive drawing section
 };
