@@ -26,7 +26,6 @@ MyLamp.prototype.initBuffers = function () {
 	this.normals = [];
 	this.indices = [];
 
-
 	this.vertices.push(x, y, 1);
 	this.normals.push(x, y, 1);
 
