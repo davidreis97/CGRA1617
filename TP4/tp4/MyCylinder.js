@@ -26,9 +26,30 @@
 	this.normals = [];
 	this.indices = [];
 
+	this.texCoords = [];
+
 	var low = 0;
 	var high = 0;
 	var step = 1/this.stacks;
+
+	var xtext = 0;
+	var ytext = 1;
+
+	var yTextInc = 1/this.stacks;
+	var xTextInc = 1/this.slices;
+
+	for (var j = 0; j < this.stacks; j++){
+		
+		xtext = 0;
+
+		for (var i = 0; i < this.slices; i++){ //Atencao! A colocacao de vertices nao é 1 2 3 4 (como no MyPlane.js) mas sim 1 3 5 7
+			this.texCoords.push(xtext,ytext);  //     									5 6 7 8                              2 4 6 8
+			this.texCoords.push(xtext,ytext-yTextInc);
+			xtext += xTextInc;
+		}
+
+		ytext -= yTextInc;
+	}
 
 	for(var j = 0; j < this.stacks; j++){
 		low = high;
@@ -58,7 +79,10 @@
 				this.indices.push(0 + ((i * 2) + (j*2*this.slices)), 1 + ((i * 2) + (j*2*this.slices)), 0 + (j*2*this.slices));
 				this.indices.push(1 + ((i * 2) + (j*2*this.slices)), 1 + (j*2*this.slices), 0 + (j*2*this.slices));
 			}
+
+
 		}
+
 	}
 	
 

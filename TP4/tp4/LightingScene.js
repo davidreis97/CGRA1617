@@ -57,6 +57,9 @@ LightingScene.prototype.init = function(application) {
 	this.floorMaterial = new CGFappearance(this);
 	this.floorMaterial.loadTexture("resources/images/floor.png");
 
+	this.marbleMaterial = new CGFappearance(this);
+	this.marbleMaterial.loadTexture("resources/images/marble.jpg");
+
 	this.slidesAppearance = new CGFappearance(this);
 	this.slidesAppearance.loadTexture("resources/images/slides.png");
 	this.slidesAppearance.setDiffuse(0.6,0.6,0.6,1);
@@ -249,20 +252,21 @@ LightingScene.prototype.display = function() {
 		this.prism.display();
 	this.popMatrix();
 
-	// MyCylinder
-	this.pushMatrix();
-		this.scale(1,10,1);
-		this.translate(5,1,13);
-
-		this.rotate(90 * degToRad, 1, 0, 0);
-		this.cylinder.display();
-	this.popMatrix();
-
 	// MyLamp
 	this.pushMatrix();
 		this.translate(7,10,7);
 		this.rotate(90 * degToRad, 1, 0, 0);
 		this.lamp.display();
+	this.popMatrix();
+
+	// MyCylinder
+	this.pushMatrix();
+		this.marbleMaterial.apply();
+		this.scale(1,10,1);
+		this.translate(5,1,13);
+
+		this.rotate(90 * degToRad, 1, 0, 0);
+		this.cylinder.display();
 	this.popMatrix();
 	// ---- END Primitive drawing section	
 };
