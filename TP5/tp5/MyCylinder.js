@@ -52,6 +52,11 @@
 		ytext -= yTextInc;
 	}
 
+	/*
+	this.vertices.push(0,0,1); //Colocacao de um vertice no centro para a criacao da tampa
+	this.normals.push(0,0,1);*/
+
+
 	for(var j = 0; j < this.stacks; j++){
 		low = high;
 		high += step;
@@ -81,11 +86,15 @@
 				this.indices.push(1 + ((i * 2) + (j*2*this.slices)), 1 + (j*2*this.slices), 0 + (j*2*this.slices));
 			}
 
-
 		}
 
 	}
 	
+	/*
+	for(var i = 0; i < (this.slices*2)-2; i += 2){ //Criacao de uma tampa
+		this.indices.push(0, 4 + i + (this.slices * 2 * (this.stacks-1)), 2 + i + (this.slices * 2 * (this.stacks-1)));
+	}
+	this.indices.push(0,2,this.slices*2); //Ultimo triangulo => (centro, primeiro vertice, ultimo vertice)	*/
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();
