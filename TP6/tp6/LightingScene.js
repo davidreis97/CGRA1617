@@ -37,15 +37,10 @@ LightingScene.prototype.init = function(application) {
 	this.axis = new CGFaxis(this);
 
 	// Scene elements
-	this.table = new MyTable(this);
-	this.wall = new MyQuad(this,-1,2,-1,2);
-	this.floor = new Plane(this, 10,1/10,1/10);
-	this.prism = new MyPrism(this,8,20);
-	this.cylinder = new MyCylinder(this,8,20);
-	this.lamp = new MyLamp(this,8,20);
 	this.clock = new MyClock(this);
 	this.submarine = new MySubmarine(this);
 	this.pole = new MyCylinder(this,8,20);
+	this.floor = new Plane(this, 10,1/4,1/4);
 
 	/* A textura slide.png é um quadrado (512*512) enquanto que o quadro é um rectangulo (6*4), ou seja, queremos representar a textura em 4*4.
 	*  Desse modo, 4 = 6 * xRatio <=> xRatio = 4/6
@@ -207,25 +202,6 @@ LightingScene.prototype.display = function() {
 		this.floor.display();
 	this.popMatrix();
 
-	// Left Wall
-	this.pushMatrix();
-		this.windowMaterial.apply();
-
-		this.translate(0, 4, 7.5);
-		this.rotate(90 * degToRad, 0, 1, 0);
-		this.scale(15, 8, 0.2);
-		this.wall.display();
-	this.popMatrix();
-
-	// Plane Wall
-	this.pushMatrix();
-		this.wallMaterial.apply();
-		
-		this.translate(7.5, 4, 0);
-		this.scale(15, 8, 0.2);
-		this.wall.display();
-	this.popMatrix();
-
 	// Pole
 	this.pushMatrix();
 		this.materialDefault.apply();		
@@ -235,63 +211,6 @@ LightingScene.prototype.display = function() {
 		this.pole.display();
 	this.popMatrix();
 
-	// First Table
-	this.pushMatrix();
-		this.translate(5, 0, 8);
-		this.table.display();
-	this.popMatrix();
-
-	// Second Table
-	this.pushMatrix();
-		this.translate(12, 0, 8);
-		this.table.display();
-	this.popMatrix();
-
-	// Board A
-	this.pushMatrix();
-		this.slidesAppearance.apply();
-		this.translate(4, 4.5, 0.2);
-		this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
-		
-		this.boardA.display();
-	this.popMatrix();
-
-	// Board B
-	this.pushMatrix();
-		this.boardAppearance.apply();
-		this.translate(10.5, 4.5, 0.2);
-		this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
-		
-		this.boardB.display();
-	this.popMatrix();
-
-	// MyPrism
-	this.pushMatrix();
-		this.scale(1,10,1);
-		this.translate(10,1,13);
-
-		this.rotate(90 * degToRad, 1, 0, 0);
-		this.prism.display();
-	this.popMatrix();
-
-	// MyLamp
-	this.pushMatrix();
-		this.translate(7,10,7);
-		this.rotate(90 * degToRad, 1, 0, 0);
-		this.lamp.display();
-	this.popMatrix();
-
-	// MyCylinder
-	this.pushMatrix();
-		this.marbleMaterial.apply();
-		this.scale(1,10,1);
-		this.translate(5,1,13);
-
-		this.rotate(90 * degToRad, 1, 0, 0);
-		this.cylinder.display();
-	this.popMatrix();
-	// ---- END Primitive drawing section	
-
 	// MyClock
 	this.pushMatrix();
 		this.translate(8,5,0);
@@ -299,7 +218,7 @@ LightingScene.prototype.display = function() {
 		this.clock.display();
 	this.popMatrix();
 
-	//MySubmarine
+	// MySubmarine
 	this.pushMatrix();
 		this.rotate(125 * degToRad, 0, 1, 0); //Angulo estimado...
 		this.translate(-5,0,0);
