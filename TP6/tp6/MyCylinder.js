@@ -2,11 +2,12 @@
  * MyCylinder
  * @constructor
  */
- function MyCylinder(scene, slices, stacks) {
+ function MyCylinder(scene, slices, stacks, inside = false) {
  	CGFobject.call(this,scene);
 	
 	this.slices = slices;
 	this.stacks = stacks;
+	this.inside = inside;
 
  	this.initBuffers();
  };
@@ -57,7 +58,7 @@
 	this.normals.push(0,0,1);*/
 
 
-	for(var j = 0; j < this.stacks; j++){
+	for(var j = 0; j < this.stacks && !this.inside; j++){
 		low = high;
 		high += step;
 		currentAngle = 0;
@@ -89,6 +90,40 @@
 		}
 
 	}
+
+	for(var j = 0; j < this.stacks && this.inside; j++){
+		low = high;
+		high += step;
+		currentAngle = 0;
+
+		for (var i = 0; i < this.slices; i++) {
+			z = 0;
+
+			x = Math.sin(currentAngle);
+			y = Math.cos(currentAngle);
+
+			this.vertices.push(x, y, low); //Bottom 0
+			this.vertices.push(x, y, high); //Top 1
+			
+			this.normals.push(-x, -y, 0); //Bottom 
+			this.normals.push(-x, -y, 0); //Bottom 
+
+			currentAngle += ((Math.PI * 2) / this.slices);
+			x = Math.sin(currentAngle);
+			y = Math.cos(currentAngle);
+
+			if(i != this.slices-1){
+				this.indices.push(1 + ((i * 2) + (j*2*this.slices)), 0 + ((i * 2) + (j*2*this.slices)), 2 + ((i * 2) + (j*2*this.slices)));
+				this.indices.push(3 + ((i * 2) + (j*2*this.slices)), 1 + ((i * 2) + (j*2*this.slices)), 2 + ((i * 2) + (j*2*this.slices)));
+			}else{ //Caso seja a ultima face, os vertices têm de conectar com os vertices da primeira.
+				this.indices.push(1 + ((i * 2) + (j*2*this.slices)), 0 + ((i * 2) + (j*2*this.slices)), 0 + (j*2*this.slices));
+				this.indices.push(1 + (j*2*this.slices), 1 + ((i * 2) + (j*2*this.slices)), 0 + (j*2*this.slices));
+			}
+
+		}
+
+	}
+
 	
 	/*
 	for(var i = 0; i < (this.slices*2)-2; i += 2){ //Criacao de uma tampa

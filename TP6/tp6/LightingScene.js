@@ -16,8 +16,12 @@ LightingScene.prototype.constructor = LightingScene;
 LightingScene.prototype.init = function(application) {
 	CGFscene.prototype.init.call(this, application);
 
-	this.option1 = true;
-	this.option2 = false;
+	this.light0 = true;
+	this.light1 = true;
+	this.light2 = true;
+	this.light3 = true;
+	this.light4 = true;
+
 	this.speed = 3;
 
 	this.initCameras();
@@ -123,12 +127,10 @@ LightingScene.prototype.initLights = function() {
 	this.lights[0].setAmbient(0, 0, 0, 1);
 	this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
 	this.lights[0].setSpecular(1,1,0,1);
-	this.lights[0].enable();
 	
 
 	this.lights[1].setAmbient(0, 0, 0, 1);
 	this.lights[1].setDiffuse(1.0, 1.0, 1.0, 1.0);
-	this.lights[1].enable();
 
 	this.lights[2].setAmbient(0, 0, 0, 1);
 	this.lights[2].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -136,7 +138,6 @@ LightingScene.prototype.initLights = function() {
 	this.lights[2].setConstantAttenuation(0);
 	this.lights[2].setLinearAttenuation(1);
 	this.lights[2].setQuadraticAttenuation(0);
-	this.lights[2].enable();
 
 	this.lights[3].setAmbient(0, 0, 0, 1);
 	this.lights[3].setDiffuse(1.0, 1.0, 1.0, 1.0);
@@ -144,15 +145,29 @@ LightingScene.prototype.initLights = function() {
 	this.lights[3].setConstantAttenuation(0);
 	this.lights[3].setLinearAttenuation(0);
 	this.lights[3].setQuadraticAttenuation(0.2);
-	this.lights[3].enable();
 
 	this.lights[4].setAmbient(0, 0, 0, 1);
 	this.lights[4].setDiffuse(0.1, 0.1, 0.1, 1);
 	this.lights[4].setSpecular(0.1,0.1,0,1);
-	this.lights[4].enable();
 };
 
 LightingScene.prototype.updateLights = function() {
+	if (this.light0) this.lights[0].enable();
+	else this.lights[0].disable();
+	
+	if (this.light1) this.lights[1].enable();
+	else this.lights[1].disable();
+	
+	if (this.light2) this.lights[2].enable();
+	else this.lights[2].disable();
+	
+	if (this.light3) this.lights[3].enable();
+	else this.lights[3].disable();
+
+	if (this.light4) this.lights[4].enable();
+	else this.lights[4].disable();
+
+
 	for (i = 0; i < this.lights.length; i++)
 		this.lights[i].update();
 };
@@ -220,12 +235,13 @@ LightingScene.prototype.display = function() {
 
 	// MySubmarine
 	this.pushMatrix();
-		this.rotate(125 * degToRad, 0, 1, 0); //Angulo estimado...
-		this.translate(-5,0,0);
-		this.submarine.display();
+		this.materialDefault.apply();
+		this.submarine.customDisplay();
 	this.popMatrix();
 };
 
 LightingScene.prototype.doSomething = function () { 
-	console.log("Doing something..."); 
+	console.log("Doing something...");
 };
+
+

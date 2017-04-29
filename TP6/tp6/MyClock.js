@@ -13,6 +13,8 @@
 
 	this.oldTime = 0;
 
+	this.clockRunning = true;
+
 	this.hourPointer = new MyClockHand(this.scene, (360/12) * hour, 0.4); //vermelho
 	this.minutesPointer = new MyClockHand(this.scene, (360/60) * minutes, 0.7); //verde
 	this.secondsPointer = new MyClockHand(this.scene, (360/60) * seconds, 0.9); //azul
@@ -65,10 +67,12 @@
  		this.textureMaterial.apply();
  	 	this.clockFace.display();
  	this.scene.popMatrix();
+
+ 	this.materialDefault.apply();
  };
 
  MyClock.prototype.update = function(currTime){
- 	if (this.oldTime == 0) {
+ 	if (this.oldTime == 0 || !this.clockRunning) {
  		this.oldTime = currTime;
  		return;
  	}
