@@ -64,6 +64,28 @@ LightingScene.prototype.init = function(application) {
 	this.oceanMaterial = new CGFappearance(this);
 	this.oceanMaterial.loadTexture("resources/images/ocean.jpg");
 
+	this.metal1Material = new CGFappearance(this);
+	this.metal1Material.loadTexture("resources/images/metal1.jpg");
+	
+	this.metal2Material = new CGFappearance(this);
+	this.metal2Material.loadTexture("resources/images/metal2.jpg");
+	
+	this.metal3Material = new CGFappearance(this);
+	this.metal3Material.loadTexture("resources/images/metal3.jpg");
+
+	this.submarineAppearances = [
+		this.metal1Material,
+		this.metal2Material,
+		this.metal3Material,
+	];
+
+	this.submarineAppearancesList = {};
+	this.submarineAppearancesList["Metal1"] = this.submarineAppearances[0];
+	this.submarineAppearancesList["Metal2"] = this.submarineAppearances[1];
+	this.submarineAppearancesList["Metal3"] = this.submarineAppearances[2];
+
+	this.currSubmarineAppearance = "Metal1";
+
 	this.marbleMaterial = new CGFappearance(this);
 	this.marbleMaterial.loadTexture("resources/images/marble.jpg");
 
@@ -174,6 +196,7 @@ LightingScene.prototype.updateLights = function() {
 
 LightingScene.prototype.update = function(currTime){
 	this.clock.update(currTime);
+	this.submarine.update(currTime);
 };
 
 
@@ -235,7 +258,7 @@ LightingScene.prototype.display = function() {
 
 	// MySubmarine
 	this.pushMatrix();
-		this.materialDefault.apply();
+		this.submarineAppearancesList[this.currSubmarineAppearance].apply();
 		this.submarine.customDisplay();
 	this.popMatrix();
 };

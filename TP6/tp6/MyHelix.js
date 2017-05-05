@@ -8,6 +8,10 @@ function MyHelix(scene, slices, stacks) {
 	this.slices = slices;
 	this.stacks = stacks;
 
+	this.angle = Math.PI/2;
+
+	this.oldTime = 0;
+
 	this.initBuffers();
 };
 
@@ -22,7 +26,6 @@ MyHelix.prototype.initBuffers = function() {
 };
 
 MyHelix.prototype.display = function(){
-	
 	this.scene.pushMatrix();
 		this.scene.translate(0,0,-0.5);
 		this.cylinderInside.display();
@@ -30,6 +33,7 @@ MyHelix.prototype.display = function(){
 	this.scene.popMatrix();
 	
 	this.scene.pushMatrix();
+		this.scene.rotate(this.angle,0,0,1);
 		this.scene.rotate(Math.PI/2,0,1,0);
 		this.scene.scale(0.43,0.43,0.43);
 		this.prism.display();
@@ -39,4 +43,21 @@ MyHelix.prototype.display = function(){
 		this.scene.scale(0.3,0.3,0.3);
 		this.semiSphere.display();
 	this.scene.popMatrix();
+}
+
+MyHelix.prototype.update = function(direction,currTime,velocity){
+	if (this.oldTime == 0) {
+ 		this.oldTime = currTime;
+ 		return;
+ 	}
+
+ 	if(direction=="clockwise"){
+ 		this.angle -= (currTime-this.oldTime)*(Math.PI*2/1000)*velocity;
+ 	}else if(direction=="anticlockwise"){
+ 		this.angle += (currTime-this.oldTime)*(Math.PI*2/1000)*velocity;
+ 	}else{
+ 		console.log("Warning! Unknown direction [" + direction + "]");
+ 	}
+
+ 	this.oldTime = currTime;
 }

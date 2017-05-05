@@ -50,7 +50,18 @@
  		0.2, -2, -0.6,				//5
  		0.2, -2 * this.ratio, 0.6,	//6
  		0.2, 2 * this.ratio, 0.6,	//7
-  	]
+  	];
+
+  	this.texCoords = [
+  		1 , 0,
+  		1 , 1,
+  		0 , 1,
+  		0 , 0,
+  		1 , 0,
+  		1 , 1,
+  		0 , 1,
+  		0 , 0,
+  	];
 
  	this.primitiveType = this.scene.gl.TRIANGLES;
  	this.initGLBuffers();

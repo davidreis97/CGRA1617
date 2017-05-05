@@ -19,6 +19,7 @@ serialInclude([
 	'MySubmarine.js',
 	'MySail.js',
 	'MyHelix.js',
+	'MyPeriscope.js',
 	
 
 	main=function() {

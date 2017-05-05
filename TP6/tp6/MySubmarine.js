@@ -10,7 +10,14 @@
 	this.submarineY = 2;
 	this.submarineZ = 0;
 
+	this.verticalSailAngle = 0;
+	this.horizontalSailAngle = 0;
+
+	this.oldTime = 0;
+
+	this.velocity = 0;
  	this.initBuffers();
+
  };
 
  MySubmarine.prototype = Object.create(CGFobject.prototype);
@@ -19,46 +26,69 @@
  MySubmarine.prototype.initBuffers = function() {
  	
  	this.mainBody = new MyCylinder(this.scene,16,20);
- 	this.mainPeriscope = new MyCylinder(this.scene,16,20);
- 	this.upperPeriscope = new MyCylinder(this.scene,16,20);
- 	this.smallPeriscope = new MyCylinder(this.scene,16,20);
- 	this.mainPeriscopeCover = new MyPolygon(this.scene,16);
- 	this.smallPeriscopeCover = new MyPolygon(this.scene,16);
  	this.frontSphere = new MyLamp(this.scene,16,10);
  	this.backSphere = new MyLamp(this.scene,16,10);
  	this.backSailVertical = new MySail(this.scene,1.64/2.34);
  	this.backSailHorizontal = new MySail(this.scene,1.64/2.34);
- 	this.periscopeSail = new MySail(this.scene,1.64/2.34);
  	this.rightHelix = new MyHelix(this.scene, 16, 20);
  	this.leftHelix = new MyHelix(this.scene, 16, 20);
+ 	this.periscope = new MyPeriscope(this.scene);
 }
 
 MySubmarine.prototype.move = function (input) { 
+
 	switch(input){
+		case ("front"):
+		{
+			this.velocity++;
+			break;
+		}
+		case ("back"):
+		{
+			this.velocity--;
+			break;
+		}
+		case ("left"):
+		{
+			this.submarineRotation += 2 * degToRad;
+			this.verticalSailAngle = -Math.PI/4;
+			break;
+		}
+		case ("right"):
+		{
+			this.submarineRotation -= 2 * degToRad;
+			this.verticalSailAngle = Math.PI/4;
+			break;
+		}
 		case ("up"):
 		{
-			this.submarineX += Math.sin(this.submarineRotation);
-			this.submarineZ += Math.cos(this.submarineRotation);
+			this.submarineY += 0.2;
+			this.horizontalSailAngle = Math.PI/4;
 			break;
 		}
-		case("down"):
+		case ("down"):
 		{
-			this.submarineX -= Math.sin(this.submarineRotation);
-			this.submarineZ -= Math.cos(this.submarineRotation);
+			this.submarineY -= 0.2;
+			this.horizontalSailAngle = -Math.PI/4;
 			break;
 		}
-		case("left"):
+		case ("periscopeUp"):
 		{
-			this.submarineRotation += 5 * degToRad;
+			this.periscope.move("up");
 			break;
 		}
-		case("right"):
+		case ("periscopeDown"):
 		{
-			this.submarineRotation -= 5 * degToRad;
+			this.periscope.move("down");
 			break;
 		}
-	}
+		default:
+		{
+			console.log("ERROR! Unknown movement direction [" + input + "]");
+			break;
+		}
 
+	}
 
 	if(this.submarineRotation >= (Math.PI*2)){ //Previne overflow
 		this.submarineRotation -= Math.PI*2;
@@ -67,6 +97,19 @@ MySubmarine.prototype.move = function (input) {
 	}
 		
 };
+
+MySubmarine.prototype.resetSail = function (type) { 
+	if (type == "vertical"){
+		this.verticalSailAngle = 0;
+	}else if (type == "horizontal"){
+		this.horizontalSailAngle = 0;
+	}else{
+		console.log("ERROR! Unknown reset sail type [" + type + "]");
+	}
+	
+};
+
+
 
 MySubmarine.prototype.customDisplay = function () { 
 	this.scene.pushMatrix();
@@ -91,59 +134,20 @@ MySubmarine.prototype.customDisplay = function () {
 			this.scene.rotate(Math.PI, 0, 1, 0);
 			this.backSphere.display();
 		this.scene.popMatrix();
-
-		this.scene.pushMatrix(); //Main Periscope
-			this.scene.translate(0,1 + 0.70,1.8);
-			this.scene.rotate(Math.PI/2, 1, 0, 0);
-			this.scene.scale(0.59,0.88,1.5);
-			this.mainPeriscope.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix(); //Main Periscope Cover
-			this.scene.translate(0,0.70,1.8);
-			this.scene.rotate(-Math.PI/2, 1, 0, 0);
-			this.scene.scale(0.59,0.88,1);
-			this.mainPeriscopeCover.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix(); //Upper Periscope
-			this.scene.translate(0,1.6,1.8);
-			this.scene.rotate(-Math.PI/2, 1, 0, 0);
-			this.scene.scale(0.06,0.06,1.2);
-			this.upperPeriscope.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix(); //Small Periscope
-			this.scene.translate(0,2.76,1.7);
-			this.scene.scale(0.06,0.06,0.3);
-			this.smallPeriscope.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix(); //Small Periscope Cover
-			this.scene.translate(0,2.76,1.7);
-			this.scene.scale(0.06,0.06,0.3);
-			this.smallPeriscopeCover.display();
-		this.scene.popMatrix();
 		
-		this.scene.pushMatrix();
+		this.scene.pushMatrix(); //Vertical Back Sail
 			this.scene.translate(0,0,-0.46)
+			this.scene.rotate(this.verticalSailAngle,0,1,0);
 			this.scene.scale(0.6,1,0.46);
 			this.backSailVertical.display();
 		this.scene.popMatrix();
 
-		this.scene.pushMatrix();
+		this.scene.pushMatrix(); //Horizontal Back Sail
 			this.scene.translate(0,0,-0.46);
 			this.scene.rotate(-Math.PI/2,0,0,1);
+			this.scene.rotate(this.horizontalSailAngle,0,1,0);
 			this.scene.scale(0.6,1,0.46);
 			this.backSailHorizontal.display();
-		this.scene.popMatrix();
-
-		this.scene.pushMatrix();
-			this.scene.translate(0,1.3,1.8);
-			this.scene.rotate(Math.PI,0,1,0);
-			this.scene.rotate(-Math.PI/2,0,0,1);
-			this.scene.scale(0.4,0.75,0.46);
-			this.periscopeSail.display();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
@@ -157,8 +161,26 @@ MySubmarine.prototype.customDisplay = function () {
 			this.scene.scale(0.4,0.4,0.4);
 			this.leftHelix.display();
 		this.scene.popMatrix();
+
+		this.scene.pushMatrix();
+			this.periscope.display();
+		this.scene.popMatrix();
 		
 	this.scene.popMatrix();
 };
 
 
+MySubmarine.prototype.update = function (currTime) {
+	if (this.oldTime == 0) {
+ 		this.oldTime = currTime;
+ 		return;
+ 	}
+
+	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)/1000;
+	this.submarineZ += (currTime-this.oldTime)*this.velocity*Math.cos(this.submarineRotation)/1000;
+
+	this.rightHelix.update("clockwise",currTime,this.velocity);
+	this.leftHelix.update("anticlockwise",currTime,this.velocity);
+
+	this.oldTime = currTime;
+};
