@@ -15,6 +15,8 @@
 
 	this.oldTime = 0;
 
+	this.firing = 0;
+
 	this.velocity = 0;
  	this.initBuffers();
 
@@ -82,6 +84,11 @@ MySubmarine.prototype.move = function (input) {
 			this.periscope.move("down");
 			break;
 		}
+		case ("fire"):
+		{
+			this.fire();
+			break;
+		}
 		default:
 		{
 			console.log("ERROR! Unknown movement direction [" + input + "]");
@@ -109,7 +116,10 @@ MySubmarine.prototype.resetSail = function (type) {
 	
 };
 
-
+MySubmarine.prototype.fire = function () {
+	this.torpedo = new MyTorpedo(this.scene,this.submarineX,this.submarineY - 1.3,this.submarineZ);
+	this.firing = 1;
+};
 
 MySubmarine.prototype.customDisplay = function () { 
 	this.scene.pushMatrix();
@@ -119,11 +129,12 @@ MySubmarine.prototype.customDisplay = function () {
 
 		this.scene.pushMatrix(); //Main Body
 			this.scene.scale(0.73,1,4.08);
+			this.scene.translate(0,0,-0.5);
 			this.mainBody.display();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix(); //Front Sphere
-			this.scene.translate(0,0,4.08);
+			this.scene.translate(0,0,2.04);
 			this.scene.rotate(-Math.PI, 0, 0, 1);
 			this.scene.scale(0.73,1,0.92);
 			this.frontSphere.display();
@@ -131,19 +142,20 @@ MySubmarine.prototype.customDisplay = function () {
 
 		this.scene.pushMatrix(); //Back Sphere
 			this.scene.scale(0.73,1,0.92);
+			this.scene.translate(0,0,-2.04);
 			this.scene.rotate(Math.PI, 0, 1, 0);
 			this.backSphere.display();
 		this.scene.popMatrix();
 		
 		this.scene.pushMatrix(); //Vertical Back Sail
-			this.scene.translate(0,0,-0.46)
+			this.scene.translate(0,0,-0.46 - 2.04)
 			this.scene.rotate(this.verticalSailAngle,0,1,0);
 			this.scene.scale(0.6,1,0.46);
 			this.backSailVertical.display();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix(); //Horizontal Back Sail
-			this.scene.translate(0,0,-0.46);
+			this.scene.translate(0,0,-0.46 - 2.04);
 			this.scene.rotate(-Math.PI/2,0,0,1);
 			this.scene.rotate(this.horizontalSailAngle,0,1,0);
 			this.scene.scale(0.6,1,0.46);
@@ -151,22 +163,29 @@ MySubmarine.prototype.customDisplay = function () {
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			this.scene.translate(1.075,-0.4,0.3);
+			this.scene.translate(1.075,-0.4,0.3 - 2.04);
 			this.scene.scale(0.4,0.4,0.4);
 			this.rightHelix.display();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-			this.scene.translate(-1.075,-0.4,0.3);
+			this.scene.translate(-1.075,-0.4,0.3 - 2.04);
 			this.scene.scale(0.4,0.4,0.4);
 			this.leftHelix.display();
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
+			this.scene.translate(0,0,0.3 - 2.04);
 			this.periscope.display();
 		this.scene.popMatrix();
 		
 	this.scene.popMatrix();
+
+	if(this.firing){
+		this.scene.pushMatrix();
+			this.torpedo.display();
+		this.scene.popMatrix();
+	}
 };
 
 
@@ -174,6 +193,10 @@ MySubmarine.prototype.update = function (currTime) {
 	if (this.oldTime == 0) {
  		this.oldTime = currTime;
  		return;
+ 	}
+
+ 	if(this.firing){
+ 		this.torpedo.update(currTime);
  	}
 
 	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)/1000;

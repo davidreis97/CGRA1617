@@ -16,6 +16,18 @@ LightingScene.prototype.constructor = LightingScene;
 LightingScene.prototype.init = function(application) {
 	CGFscene.prototype.init.call(this, application);
 
+	this.target1 = new MyTarget(this,1,0,1);
+	this.target2 = new MyTarget(this,10,0,7);
+	this.target3 = new MyTarget(this,7,0,3);
+	this.target4 = new MyTarget(this,4,0,1);
+
+	this.targets = [
+		this.target1,
+		this.target2,
+		this.target3,
+		this.target4
+	];
+
 	this.light0 = true;
 	this.light1 = true;
 	this.light2 = true;
@@ -252,7 +264,6 @@ LightingScene.prototype.display = function() {
 	// MyClock
 	this.pushMatrix();
 		this.translate(8,5,0);
-		//this.scale(0.7,0.7,0.7); //Scale para caber melhor na posicao pedida.
 		this.clock.display();
 	this.popMatrix();
 
@@ -261,6 +272,10 @@ LightingScene.prototype.display = function() {
 		this.submarineAppearancesList[this.currSubmarineAppearance].apply();
 		this.submarine.customDisplay();
 	this.popMatrix();
+
+	for(i = 0; i < this.targets.length; i++){
+		this.targets[i].display();
+	}
 };
 
 LightingScene.prototype.doSomething = function () { 

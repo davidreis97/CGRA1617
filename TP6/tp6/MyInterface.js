@@ -124,12 +124,26 @@ MyInterface.prototype.processKeyboard = function(event) {
 			break;
 		}
 
-		case (108):	// E
+		case (108):	// L
 		{
 			console.log("Key 'L' pressed");
 			this.scene.submarine.move("periscopeDown");
 			break;
-		}		
+		}
+
+		case (108):	// L
+		{
+			console.log("Key 'L' pressed");
+			this.scene.submarine.move("periscopeDown");
+			break;
+		}
+
+		case (102):	// F
+		{
+			console.log("Key 'F' pressed");
+			this.scene.submarine.move("fire");
+			break;
+		}	
 	};
 };
 
