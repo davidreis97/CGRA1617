@@ -117,8 +117,13 @@ MySubmarine.prototype.resetSail = function (type) {
 };
 
 MySubmarine.prototype.fire = function () {
-	this.torpedo = new MyTorpedo(this.scene,this.submarineX,this.submarineY - 1.3,this.submarineZ);
-	this.firing = 1;
+	if(this.scene.targets.length > 0){
+		this.torpedo = new MyTorpedo(this.scene,this.submarineX,this.submarineY - 1.3,this.submarineZ);
+		this.firing = 1;
+	}else{
+		console.log("Mission accomplished, no more targets to destroy.");
+	}
+	
 };
 
 MySubmarine.prototype.customDisplay = function () { 
@@ -196,7 +201,7 @@ MySubmarine.prototype.update = function (currTime) {
  	}
 
  	if(this.firing){
- 		this.torpedo.update(currTime);
+ 		this.firing = this.torpedo.update(currTime);
  	}
 
 	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)/1000;
