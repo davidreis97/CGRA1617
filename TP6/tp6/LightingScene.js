@@ -42,7 +42,7 @@ LightingScene.prototype.init = function(application) {
 
 	this.enableTextures(true);
 
-	this.setUpdatePeriod(100);
+	this.setUpdatePeriod(100); //TODO - CHANGE??
 
 	this.gl.clearColor(0.0, 0.0, 1.0, 1.0);
 	this.gl.clearDepth(100.0);
