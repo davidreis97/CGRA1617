@@ -28,23 +28,21 @@ MyTorpedo.prototype.constructor=MyTorpedo;
 MyTorpedo.prototype.start = function(){
 	this.target = this.scene.targets[0];
 
-	this.zRotation = this.submarineRotationVertical;
+	this.rotationVertical = -this.scene.submarine.submarineRotationVertical;
 		
-	var aux = vec3.create();
-	aux = vec3.add(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.submarineRotationVertical),
-				   6*Math.sin(this.submarineRotationVertical),
-				   6*Math.cos(this.scene.submarine.submarineRotation)*Math.cos(this.submarineRotationVertical));
-	var aux2 = vec3.fromValues(0,0,1);
+	var aux = vec3.fromValues(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical),
+				   			  -6*Math.sin(this.scene.submarine.submarineRotationVertical),
+				              6*Math.cos(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical));
 
-	this.yRotation = this.angle(aux,aux2);
+	this.rotationHorizontal = this.scene.submarine.submarineRotation;
 
-	var dist = vec3.distance(this.pos,this.target.pos);
-	this.tIncrementPerSecond = 1/dist;
+	this.dist = vec3.distance(this.pos,this.target.pos);
+	this.tIncrementPerSecond = 1/this.dist; //TODO???
 
 	this.P1 = vec3.clone(this.pos);
 	this.P2 = vec3.create();
 	this.P2 = vec3.add(this.P2,aux,this.pos);
-	this.P3 = vec3.fromValues(this.target.pos[0],this.target.pos[1] + 3,this.target.pos[2]); //TODO - Improve points 
+	this.P3 = vec3.fromValues(this.target.pos[0],this.target.pos[1] + 3,this.target.pos[2]);
 	this.P4 = vec3.clone(this.target.pos);
 };
 
@@ -56,8 +54,8 @@ MyTorpedo.prototype.display = function() {
 
 	this.scene.translate(this.pos[0],this.pos[1],this.pos[2]);
 
-	this.scene.rotate(this.zRotation,0,0,1);
-	this.scene.rotate(this.yRotation,0,1,0);
+	this.scene.rotate(this.rotationHorizontal,0,1,0);
+	this.scene.rotate(this.rotationVertical,1,0,0);
 
 		this.scene.pushMatrix(); //Main Body
 			this.scene.scale(0.3,0.3,1);
@@ -121,9 +119,19 @@ MyTorpedo.prototype.update = function (currTime) {
  	}
 
 	this.pos = this.bezier(this.t);
+
+	var oldPosHor = vec2.fromValues(this.oldPos[0],this.oldPos[2]);
+	var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]);
+
 	this.t += (this.tIncrementPerSecond / 1000) * (currTime - this.oldTime);
 
-	this.zRotation = Math.atan(this.slope(this.oldPos,this.pos));
+	var posHor = vec2.fromValues(this.pos[0],this.pos[2]);
+	var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]);
+
+	this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //TODO - POLISH
+
+	console.log(this.slope(posHor,oldPosHor));
+	this.rotationHorizontal = -Math.atan(this.slope(posHor,oldPosHor)); //TODO - FIX
 
 	this.oldTime = currTime;
 
@@ -161,6 +169,7 @@ MyTorpedo.prototype.bezier = function(t) {
 	return final;
 }
 
+/*
 MyTorpedo.prototype.angle = function(a, b) { //TODO - Check if ok with teacher, this is from GLMatrix
 	var tempA = vec3.fromValues(a[0], a[1], a[2]);
     var tempB = vec3.fromValues(b[0], b[1], b[2]);
@@ -175,7 +184,7 @@ MyTorpedo.prototype.angle = function(a, b) { //TODO - Check if ok with teacher, 
     } else {
         return Math.acos(cosine);
     }     
-}
+}*/
 
 MyTorpedo.prototype.slope = function(a, b) { //Calculates the slope of a line between two points
 	var y = b[1] - a[1];
