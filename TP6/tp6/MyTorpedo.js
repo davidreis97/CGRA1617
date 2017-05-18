@@ -28,20 +28,15 @@ MyTorpedo.prototype.constructor=MyTorpedo;
 MyTorpedo.prototype.start = function(){
 	this.target = this.scene.targets[0];
 
-	this.zRotation = 0; //Starts at 0, changes according to position and bezier current slope
+	this.zRotation = this.submarineRotationVertical;
 		
 	var aux = vec3.create();
-	aux = vec3.sub(aux,this.target.pos,this.pos);
-	aux = vec3.normalize(aux,aux);
-	aux = vec3.scale(aux,aux,6);
-	aux[1] = 0;
+	aux = vec3.add(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.submarineRotationVertical),
+				   6*Math.sin(this.submarineRotationVertical),
+				   6*Math.cos(this.scene.submarine.submarineRotation)*Math.cos(this.submarineRotationVertical));
 	var aux2 = vec3.fromValues(0,0,1);
 
-	if(this.pos[0] < this.target.pos[0]){  //TODO - Redo this
-		this.yRotation = this.angle(aux,aux2);
-	}else{
-		this.yRotation = -this.angle(aux,aux2);
-	}
+	this.yRotation = this.angle(aux,aux2);
 
 	var dist = vec3.distance(this.pos,this.target.pos);
 	this.tIncrementPerSecond = 1/dist;

@@ -74,16 +74,16 @@ LightingScene.prototype.init = function(application) {
 	this.materialA.setShininess(120);
 
 	this.oceanMaterial = new CGFappearance(this);
-	this.oceanMaterial.loadTexture("resources/images/ocean.jpg");
+	this.oceanMaterial.loadTexture("./resources/images/ocean.jpg");
 
 	this.metal1Material = new CGFappearance(this);
-	this.metal1Material.loadTexture("resources/images/metal1.jpg");
+	this.metal1Material.loadTexture("./resources/images/metal1.jpg");
 	
 	this.metal2Material = new CGFappearance(this);
-	this.metal2Material.loadTexture("resources/images/metal2.jpg");
+	this.metal2Material.loadTexture("./resources/images/metal2.jpg");
 	
 	this.metal3Material = new CGFappearance(this);
-	this.metal3Material.loadTexture("resources/images/metal3.jpg");
+	this.metal3Material.loadTexture("./resources/images/metal3.jpg");
 
 	this.submarineAppearances = [
 		this.metal1Material,
