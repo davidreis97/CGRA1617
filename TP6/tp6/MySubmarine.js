@@ -6,6 +6,7 @@
  	CGFobject.call(this,scene);
 	
  	this.submarineRotation = 125 * degToRad;
+ 	this.submarineRotationVertical = 0;
 	this.submarineX = 5;
 	this.submarineY = 2;
 	this.submarineZ = 0;
@@ -64,13 +65,13 @@ MySubmarine.prototype.move = function (input) {
 		}
 		case ("up"):
 		{
-			this.submarineY += 0.2;
+			this.submarineRotationVertical += 2 * degToRad; 
 			this.horizontalSailAngle = Math.PI/4;
 			break;
 		}
 		case ("down"):
 		{
-			this.submarineY -= 0.2;
+			this.submarineRotationVertical -= 2 * degToRad;
 			this.horizontalSailAngle = -Math.PI/4;
 			break;
 		}
@@ -131,6 +132,7 @@ MySubmarine.prototype.customDisplay = function () {
 		
 		this.scene.translate(this.submarineX,this.submarineY,this.submarineZ);
 		this.scene.rotate(this.submarineRotation, 0, 1, 0);
+		this.scene.rotate(this.submarineRotationVertical, 1, 0, 0);
 
 		this.scene.pushMatrix(); //Main Body
 			this.scene.scale(0.73,1,4.08);
@@ -204,8 +206,9 @@ MySubmarine.prototype.update = function (currTime) {
  		this.firing = this.torpedo.update(currTime);
  	}
 
-	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)/1000;
-	this.submarineZ += (currTime-this.oldTime)*this.velocity*Math.cos(this.submarineRotation)/1000;
+	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)*Math.cos(this.submarineRotationVertical)/1000;
+	this.submarineY -= (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotationVertical)/1000;
+	this.submarineZ += (currTime-this.oldTime)*this.velocity*Math.cos(this.submarineRotation)*Math.cos(this.submarineRotationVertical)/1000;
 
 	this.rightHelix.update("clockwise",currTime,this.velocity);
 	this.leftHelix.update("anticlockwise",currTime,this.velocity);
