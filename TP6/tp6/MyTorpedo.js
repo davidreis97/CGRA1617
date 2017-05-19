@@ -30,18 +30,19 @@ MyTorpedo.prototype.start = function(){
 
 	this.rotationVertical = -this.scene.submarine.submarineRotationVertical;
 		
-	var aux = vec3.fromValues(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical),
-				   			  -6*Math.sin(this.scene.submarine.submarineRotationVertical),
-				              6*Math.cos(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical));
+	var auxP2 = vec3.fromValues(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical),
+				   			    -6*Math.sin(this.scene.submarine.submarineRotationVertical),
+				                6*Math.cos(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical));
 
 	this.rotationHorizontal = this.scene.submarine.submarineRotation;
 
 	this.dist = vec3.distance(this.pos,this.target.pos);
 	this.tIncrementPerSecond = 1/this.dist; //TODO???
+	console.log(this.dist);
 
 	this.P1 = vec3.clone(this.pos);
 	this.P2 = vec3.create();
-	this.P2 = vec3.add(this.P2,aux,this.pos);
+	this.P2 = vec3.add(this.P2,auxP2,this.pos);
 	this.P3 = vec3.fromValues(this.target.pos[0],this.target.pos[1] + 3,this.target.pos[2]);
 	this.P4 = vec3.clone(this.target.pos);
 };
@@ -118,26 +119,32 @@ MyTorpedo.prototype.update = function (currTime) {
  		return 1;
  	}
 
+ 	//Calculate new position
 	this.pos = this.bezier(this.t);
 
-	var oldPosHor = vec2.fromValues(this.oldPos[0],this.oldPos[2]);
-	var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]);
+	var oldPosHor = vec3.fromValues(this.oldPos[0],0,this.oldPos[2]); //Old position for horizontal direction calculation, disregards Y value
+	var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]); //Old Y position on a graph that progresses with time
 
+	//Calculate new t value
 	this.t += (this.tIncrementPerSecond / 1000) * (currTime - this.oldTime);
 
-	var posHor = vec2.fromValues(this.pos[0],this.pos[2]);
-	var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]);
+	var posHor = vec3.fromValues(this.pos[0],0,this.pos[2]); //Current position for horizontal direction calculation, disregards Y value
+	var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]); //Current Y position on a graph that progresses with time
 
-	this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //TODO - POLISH
+	var dir = vec3.create(); 
+	var dir = vec3.sub(dir,posHor,oldPosHor); //Direction of the torpedo from a top-down prespective
+	this.rotationHorizontal = Math.atan2(dir[0],dir[2]); //Angle between the X-Axis and the line defined by the points dir[0] and dir[2]
+	this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //Arctan of a slope gives the angle of a line
 
-	console.log(this.slope(posHor,oldPosHor));
-	this.rotationHorizontal = -Math.atan(this.slope(posHor,oldPosHor)); //TODO - FIX
-
+	//Save current data for next iteration
 	this.oldTime = currTime;
-
 	this.oldPos = vec3.clone(this.pos);
 
+	//End detection, removes target from targets list
 	if(this.t >= 1){
+
+		//EXPLOSION!!!
+
 		this.scene.targets.shift();
 		return 0;
 	}else{
@@ -169,24 +176,7 @@ MyTorpedo.prototype.bezier = function(t) {
 	return final;
 }
 
-/*
-MyTorpedo.prototype.angle = function(a, b) { //TODO - Check if ok with teacher, this is from GLMatrix
-	var tempA = vec3.fromValues(a[0], a[1], a[2]);
-    var tempB = vec3.fromValues(b[0], b[1], b[2]);
- 
-    vec3.normalize(tempA, tempA);
-    vec3.normalize(tempB, tempB);
- 
-    var cosine = vec3.dot(tempA, tempB);
-
-    if(cosine > 1.0){
-        return 0;
-    } else {
-        return Math.acos(cosine);
-    }     
-}*/
-
-MyTorpedo.prototype.slope = function(a, b) { //Calculates the slope of a line between two points
+MyTorpedo.prototype.slope = function(a, b) { //Slope of the line defined by the points a and b
 	var y = b[1] - a[1];
     var x = b[0] - a[0];
  
