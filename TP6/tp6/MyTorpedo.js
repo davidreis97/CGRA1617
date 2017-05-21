@@ -19,6 +19,12 @@ function MyTorpedo(scene, x = 0, y = 0, z = 0) {
  	this.debug2 = new MyClockHand(this.scene,0,1);
  	this.debug3 = new MyClockHand(this.scene,0,1);
  	this.debug4 = new MyClockHand(this.scene,0,1);
+
+ 	this.explosion1 = new MyExplosion(this.scene,1,0,1);
+ 	this.explosion2 = new MyExplosion(this.scene,10,0,7);
+ 	this.explosion3 = new MyExplosion(this.scene,7,0,3);
+ 	this.explosion4 = new MyExplosion(this.scene,4,0,1);
+	
 };
 
 MyTorpedo.prototype = Object.create(CGFobject.prototype);
@@ -110,6 +116,7 @@ MyTorpedo.prototype.display = function() {
 		this.scene.translate(this.P4[0],this.P4[1],this.P4[2]);
 		this.debug4.display();
 	this.scene.popMatrix();
+
 };
 
 MyTorpedo.prototype.update = function (currTime) {
@@ -144,13 +151,15 @@ MyTorpedo.prototype.update = function (currTime) {
 	if(this.t >= 1){
 
 		//EXPLOSION!!!
-
+		this.explosion1.display();
+	
 		this.scene.targets.shift();
 		return 0;
 	}else{
 		return 1;
 	}
 };
+
 
 MyTorpedo.prototype.bezier = function(t) {
 	var c1 = (1-t) * (1-t) * (1-t);
