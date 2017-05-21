@@ -21,8 +21,6 @@ LightingScene.prototype.init = function(application) {
 	this.target3 = new MyTarget(this,7,0,3);
 	this.target4 = new MyTarget(this,4,0,1);
 
-	this.updateRate = 1000/60; //60 frames per second
-
 	this.targets = [
 		this.target1,
 		this.target2,
@@ -42,7 +40,9 @@ LightingScene.prototype.init = function(application) {
 
 	this.enableTextures(true);
 
-	this.setUpdatePeriod(this.updateRate); //TODO - CHANGE??
+	this.updateRate = 17
+
+	this.setUpdatePeriod(this.updateRate);
 
 	this.gl.clearColor(0.0, 0.0, 1.0, 1.0);
 	this.gl.clearDepth(100.0);

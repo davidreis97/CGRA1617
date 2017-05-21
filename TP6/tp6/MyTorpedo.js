@@ -37,7 +37,7 @@ MyTorpedo.prototype.start = function(){
 	this.rotationHorizontal = this.scene.submarine.submarineRotation;
 
 	this.dist = vec3.distance(this.pos,this.target.pos);
-	this.tIncrementPerSecond = 1/this.dist; //TODO???
+	this.tIncrementPerSecond = 1/this.dist; //TODO - Double check
 	console.log(this.dist);
 
 	this.P1 = vec3.clone(this.pos);
@@ -136,7 +136,7 @@ MyTorpedo.prototype.update = function (currTime) {
 		var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]); //Old Y position on a graph that progresses with time
 
 		//Calculate new t value
-		this.t += (this.tIncrementPerSecond / 1000) * (currTime - this.oldTime);
+		this.t += (this.tIncrementPerSecond / 1000) * this.scene.updateRate;
 
 		var posHor = vec3.fromValues(this.pos[0],0,this.pos[2]); //Current position for horizontal direction calculation, disregards Y value
 		var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]); //Current Y position on a graph that progresses with time
@@ -144,7 +144,7 @@ MyTorpedo.prototype.update = function (currTime) {
 		var dir = vec3.create(); 
 		var dir = vec3.sub(dir,posHor,oldPosHor); //Direction of the torpedo from a top-down prespective
 		this.rotationHorizontal = Math.atan2(dir[0],dir[2]); //Angle between the X-Axis and the line defined by the points dir[0] and dir[2]
-		this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //Arctan of a slope gives the angle of a line
+		this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //Arctan of a slope gives the angle of the line
 
 		//Save current data for next iteration
 		this.oldTime = currTime;

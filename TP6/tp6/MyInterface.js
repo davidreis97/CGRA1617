@@ -41,12 +41,6 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui.add(this.scene.clock, 'clockRunning');
 
-	var updateRateController = this.gui.add(this.scene, 'updateRate', 1, 1000);
-
-	updateRateController.onFinishChange(function(value) {
-		this.setUpdatePeriod(value);
-	});
-
 	this.gui.add(this.scene, 'currSubmarineAppearance', [ 'Metal1', 'Metal2', 'Metal3' ] );
 	
 	return true;
