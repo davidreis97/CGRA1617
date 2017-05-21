@@ -276,4 +276,5 @@ LightingScene.prototype.display = function() {
 	for(i = 0; i < this.targets.length; i++){
 		this.targets[i].display();
 	}
+
 };
