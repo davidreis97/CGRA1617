@@ -18,13 +18,7 @@ function MyTorpedo(scene, x = 0, y = 0, z = 0) {
  	this.debug1 = new MyClockHand(this.scene,0,1);
  	this.debug2 = new MyClockHand(this.scene,0,1);
  	this.debug3 = new MyClockHand(this.scene,0,1);
- 	this.debug4 = new MyClockHand(this.scene,0,1);
-
- 	this.explosion1 = new MyExplosion(this.scene,1,0,1);
- 	this.explosion2 = new MyExplosion(this.scene,10,0,7);
- 	this.explosion3 = new MyExplosion(this.scene,7,0,3);
- 	this.explosion4 = new MyExplosion(this.scene,4,0,1);
-	
+ 	this.debug4 = new MyClockHand(this.scene,0,1);	
 };
 
 MyTorpedo.prototype = Object.create(CGFobject.prototype);
@@ -51,6 +45,8 @@ MyTorpedo.prototype.start = function(){
 	this.P2 = vec3.add(this.P2,auxP2,this.pos);
 	this.P3 = vec3.fromValues(this.target.pos[0],this.target.pos[1] + 3,this.target.pos[2]);
 	this.P4 = vec3.clone(this.target.pos);
+
+	this.status = "running";
 };
 
 
@@ -59,10 +55,10 @@ MyTorpedo.prototype.display = function() {
 
 	this.scene.pushMatrix();
 
-	this.scene.translate(this.pos[0],this.pos[1],this.pos[2]);
+		this.scene.translate(this.pos[0],this.pos[1],this.pos[2]);
 
-	this.scene.rotate(this.rotationHorizontal,0,1,0);
-	this.scene.rotate(this.rotationVertical,1,0,0);
+		this.scene.rotate(this.rotationHorizontal,0,1,0);
+		this.scene.rotate(this.rotationVertical,1,0,0);
 
 		this.scene.pushMatrix(); //Main Body
 			this.scene.scale(0.3,0.3,1);
@@ -97,6 +93,12 @@ MyTorpedo.prototype.display = function() {
 
 	this.scene.popMatrix();
 
+	if(this.status == "exploding"){
+		this.scene.pushMatrix();
+			this.explosion.display();
+		this.scene.popMatrix();	
+	}
+	
 	this.scene.pushMatrix(); //For debugging purposes - Draws a clock hand on P1
 		this.scene.translate(this.P1[0],this.P1[1],this.P1[2]);
 		this.debug1.display();
@@ -126,38 +128,43 @@ MyTorpedo.prototype.update = function (currTime) {
  		return 1;
  	}
 
- 	//Calculate new position
-	this.pos = this.bezier(this.t);
+ 	if(this.status == "running"){
+ 		//Calculate new position
+		this.pos = this.bezier(this.t);
 
-	var oldPosHor = vec3.fromValues(this.oldPos[0],0,this.oldPos[2]); //Old position for horizontal direction calculation, disregards Y value
-	var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]); //Old Y position on a graph that progresses with time
+		var oldPosHor = vec3.fromValues(this.oldPos[0],0,this.oldPos[2]); //Old position for horizontal direction calculation, disregards Y value
+		var oldPosVer = vec2.fromValues(this.t * this.dist, this.oldPos[1]); //Old Y position on a graph that progresses with time
 
-	//Calculate new t value
-	this.t += (this.tIncrementPerSecond / 1000) * (currTime - this.oldTime);
+		//Calculate new t value
+		this.t += (this.tIncrementPerSecond / 1000) * (currTime - this.oldTime);
 
-	var posHor = vec3.fromValues(this.pos[0],0,this.pos[2]); //Current position for horizontal direction calculation, disregards Y value
-	var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]); //Current Y position on a graph that progresses with time
+		var posHor = vec3.fromValues(this.pos[0],0,this.pos[2]); //Current position for horizontal direction calculation, disregards Y value
+		var posVer = vec2.fromValues(this.t * this.dist, this.pos[1]); //Current Y position on a graph that progresses with time
 
-	var dir = vec3.create(); 
-	var dir = vec3.sub(dir,posHor,oldPosHor); //Direction of the torpedo from a top-down prespective
-	this.rotationHorizontal = Math.atan2(dir[0],dir[2]); //Angle between the X-Axis and the line defined by the points dir[0] and dir[2]
-	this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //Arctan of a slope gives the angle of a line
+		var dir = vec3.create(); 
+		var dir = vec3.sub(dir,posHor,oldPosHor); //Direction of the torpedo from a top-down prespective
+		this.rotationHorizontal = Math.atan2(dir[0],dir[2]); //Angle between the X-Axis and the line defined by the points dir[0] and dir[2]
+		this.rotationVertical = -Math.atan(this.slope(posVer, oldPosVer)); //Arctan of a slope gives the angle of a line
 
-	//Save current data for next iteration
-	this.oldTime = currTime;
-	this.oldPos = vec3.clone(this.pos);
+		//Save current data for next iteration
+		this.oldTime = currTime;
+		this.oldPos = vec3.clone(this.pos);
 
-	//End detection, removes target from targets list
-	if(this.t >= 1){
+		if(this.t>=1){
+			this.status = "exploding";
+			this.explosion = new MyExplosion(this.scene,this.pos[0],this.pos[1],this.pos[2]);
+		}
+ 	}
 
-		//EXPLOSION!!!
-		this.explosion1.display();
-	
-		this.scene.targets.shift();
-		return 0;
-	}else{
-		return 1;
+	else if(this.status == "exploding"){
+		this.status = this.explosion.update();
 	}
+
+	else{
+		console.log("Unknown torpedo status " + this.status);
+	}
+
+	return this.status; //running/exploding/exploded
 };
 
 

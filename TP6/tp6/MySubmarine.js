@@ -203,7 +203,10 @@ MySubmarine.prototype.update = function (currTime) {
  	}
 
  	if(this.firing){
- 		this.firing = this.torpedo.update(currTime);
+ 		if(this.torpedo.update(currTime) == "exploded"){
+ 			this.scene.targets.shift();
+ 			this.firing = 0;
+ 		}
  	}
 
 	this.submarineX += (currTime-this.oldTime)*this.velocity*Math.sin(this.submarineRotation)*Math.cos(this.submarineRotationVertical)/1000;

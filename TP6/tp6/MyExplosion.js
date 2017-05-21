@@ -15,10 +15,8 @@
  MyExplosion.prototype = Object.create(CGFobject.prototype);
  MyExplosion.prototype.constructor = MyExplosion;
 
- MyExplosion.prototype.initBuffers = function(){
-     
-     this.cap = new MyLamp(this.scene, 16, 20);
-    
+ MyExplosion.prototype.initBuffers = function(){ 
+    this.cap = new MyLamp(this.scene, 16, 20);
  };
 
  MyExplosion.prototype.display = function(){
@@ -29,3 +27,9 @@
      this.scene.popMatrix();
 
  };
+
+ MyExplosion.prototype.update = function(){
+    //Atualiza a explosao, retorna "exploding" se ainda nao tiver acabado a explosao e retorna "exploded" quando ja tiver acabado a explosao
+
+    return "exploding";
+ }
