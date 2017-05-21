@@ -33,6 +33,22 @@
         this.flameAppearance.apply();
         this.cap.display();
      this.scene.popMatrix();
+
+     this.scene.pushMatrix();
+        this.scene.translate(this.x+0.5,this.y,this.z);
+        this.scene.scale(this.times/50, this.times/50, this.times/50);
+        this.scene.rotate(-Math.PI/2,1,0,0);
+        this.flameAppearance.apply();
+        this.cap.display();
+    this.scene.popMatrix();
+    
+    this.scene.pushMatrix();
+        this.scene.translate(this.x,this.y+0.8,this.z);
+        this.scene.scale(this.times/80, this.times/80, this.times/80);
+        this.scene.rotate(-Math.PI/2,1,0,0);
+        this.flameAppearance.apply();
+        this.cap.display();
+    this.scene.popMatrix();
  };
 
  MyExplosion.prototype.update = function(){
