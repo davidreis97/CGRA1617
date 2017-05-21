@@ -20,8 +20,8 @@
  MyExplosion.prototype.constructor = MyExplosion;
 
  MyExplosion.prototype.initMaterials = function(){ 
-    /*this.flameAppearance = new CGFappearance(this.scene);
-    this.flameAppearance = loadTexture("resources/images/fire.jpg");*/
+    this.flameAppearance = new CGFappearance(this.scene);
+    this.flameAppearance.loadTexture("resources/images/fire.jpg");
  };
 
  MyExplosion.prototype.display = function(){
@@ -30,10 +30,9 @@
         this.scene.translate(this.x,this.y,this.z);
         this.scene.scale(this.times/40, this.times/40, this.times/40);
         this.scene.rotate(-Math.PI/2,1,0,0);
-        //this.flameAppearance.apply();
+        this.flameAppearance.apply();
         this.cap.display();
      this.scene.popMatrix();
-
  };
 
  MyExplosion.prototype.update = function(){
@@ -41,7 +40,7 @@
     if(this.times > 30){
         this.times--;
         return "exploding";
-    } 
+    }
 
     return "exploded";
  }
