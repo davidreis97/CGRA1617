@@ -157,7 +157,7 @@ MyTorpedo.prototype.update = function (currTime) {
  	}
 
 	else if(this.status == "exploding"){
-		this.status = this.explosion.update();
+		this.status = this.explosion.update(currTime);
 	}
 
 	else{

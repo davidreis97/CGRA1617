@@ -9,8 +9,10 @@
      this.y = y;
      this.z = z;
      
-     this.times = 60;
-    
+     this.times = 10;
+        
+     this.oldTime = 0;
+
      this.cap = new MyLamp(this.scene, 16, 20);
 
      this.initMaterials();
@@ -51,12 +53,21 @@
     this.scene.popMatrix();
  };
 
- MyExplosion.prototype.update = function(){
+ MyExplosion.prototype.update = function(currTime){
     //Atualiza a explosao, retorna "exploding" se ainda nao tiver acabado a explosao e retorna "exploded" quando ja tiver acabado a explosao
-    if(this.times > 30){
-        this.times--;
+
+    if (this.oldTime == 0) {
+        this.oldTime = currTime;
         return "exploding";
     }
 
-    return "exploded";
+    if(this.times > 50){
+        return "exploded";
+    }
+
+    this.times += 13 * (currTime-this.oldTime) / 200;
+
+    console.log(this.times);
+    this.oldTime = currTime;
+    return "exploding";
  }
