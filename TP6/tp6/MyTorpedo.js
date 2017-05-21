@@ -28,7 +28,7 @@ MyTorpedo.prototype.constructor=MyTorpedo;
 MyTorpedo.prototype.start = function(){
 	this.target = this.scene.targets[0];
 
-	this.rotationVertical = -this.scene.submarine.submarineRotationVertical;
+	this.rotationVertical = 0;
 		
 	var auxP2 = vec3.fromValues(6*Math.sin(this.scene.submarine.submarineRotation)*Math.cos(this.scene.submarine.submarineRotationVertical),
 				   			    -6*Math.sin(this.scene.submarine.submarineRotationVertical),

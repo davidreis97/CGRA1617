@@ -25,13 +25,6 @@ MyInterface.prototype.init = function(application) {
 	
 	this.gui = new dat.GUI();
 
-	// add a button:
-	// the first parameter is the object that is being controlled (in this case the scene)
-	// the identifier 'doSomething' must be a function declared as part of that object (i.e. a member of the scene class)
-	// e.g. LightingScene.prototype.doSomething = function () { console.log("Doing something..."); }; 
-
-	this.gui.add(this.scene, 'doSomething');	
-
 	// add a group of controls (and open/expand by defult)
 	
 	var group=this.gui.addFolder("Lights");
@@ -48,15 +41,14 @@ MyInterface.prototype.init = function(application) {
 
 	this.gui.add(this.scene.clock, 'clockRunning');
 
+	var updateRateController = this.gui.add(this.scene, 'updateRate', 1, 1000);
+
+	updateRateController.onFinishChange(function(value) {
+		this.setUpdatePeriod(value);
+	});
+
 	this.gui.add(this.scene, 'currSubmarineAppearance', [ 'Metal1', 'Metal2', 'Metal3' ] );
 	
-	// add a slider
-	// must be a numeric variable of the scene, initialized in scene.init e.g.
-	// this.speed=3;
-	// min and max values can be specified as parameters
-	
-	this.gui.add(this.scene, 'speed', -5, 5);
-
 	return true;
 };
 
@@ -151,7 +143,6 @@ MyInterface.prototype.processKeyUp = function(event) {
 	var horizontal = "horizontal"
 	var vertical = "vertical"
 
-	//For some reason, event.keyCode does not work on processKeyUp, and the keyboard codes are not the same.
 	switch (event.which)
 	{
 		case (81):	// Q

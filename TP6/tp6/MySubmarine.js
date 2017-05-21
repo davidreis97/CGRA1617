@@ -119,7 +119,7 @@ MySubmarine.prototype.resetSail = function (type) {
 
 MySubmarine.prototype.fire = function () {
 	if(this.scene.targets.length > 0){
-		this.torpedo = new MyTorpedo(this.scene,this.submarineX,this.submarineY - 1.3,this.submarineZ);
+		this.torpedo = new MyTorpedo(this.scene,this.submarineX,this.submarineY - 1.3 * Math.cos(this.submarineRotationVertical),this.submarineZ);
 		this.firing = 1;
 	}else{
 		console.log("Mission accomplished, no more targets to destroy.");
